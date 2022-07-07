@@ -1,2 +1,6 @@
 *.o
 latte_gtest_main
+*.gcda
+*.gcno
+*.info
+*/output

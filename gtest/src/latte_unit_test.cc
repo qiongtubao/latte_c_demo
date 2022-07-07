@@ -8,6 +8,6 @@ extern "C" {
 
 namespace {
     TEST(LATTE, ADD) {
-        EXPECT_EQ(3, add(1, 2));
+        EXPECT_EQ(3, add(1, 2, 1));
     }
 }
