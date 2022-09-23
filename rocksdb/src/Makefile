@@ -1,6 +1,11 @@
 
 
-default: 
+
+
+test_%: 
 	@echo "start"
-	gcc write.c -o write  -I../deps/rocksdb/include ../deps/rocksdb/librocksdb.a -lm -lrt -lstdc++ -pthread
-	@echo "end"
+	gcc $@.c -o $@  -I../deps/rocksdb/include ../deps/rocksdb/librocksdb.a -lm  -lstdc++ -pthread  -lz -ldl #-lrt  -lsnappy
+
+clean:
+	rm -rf *.o 
+	rm -rf test_write test_score_range
