@@ -191,7 +191,7 @@ void *writeProcess(void *arg) {
 
     while(1) {
         char *err = NULL;
-        int keylen =ll2string(keybuf, 100, key++);
+        int keylen =ll2string(keybuf, 100, (key++)%10000000);
         if(keylen > 0) {
             rocksdb_put(db, wopts, keybuf, keylen, valuebuf, 1000, &err);
             if (err != NULL) {
@@ -208,7 +208,7 @@ void *writeProcess(void *arg) {
         long long now = ustime() ;
         long long used = now - start_time;
         if (used >= 1000000) {
-            printf("[write]%lld/s\n", exec_count*1000000/used);
+            printf("[write]%lld/s\n", exec_count);
             exec_count = 0;
             start_time = now;
         }
@@ -242,6 +242,7 @@ int main() {
 
     rocksdb_options_set_min_write_buffer_number_to_merge(db_opts, 2);
     rocksdb_options_set_max_write_buffer_number(db_opts, 6);
+    rocksdb_options_set_disable_auto_compactions(db_opts, 1);
     rocksdb_options_set_level0_file_num_compaction_trigger(db_opts, 2);
     rocksdb_options_set_target_file_size_base(db_opts, 32*MB);
     rocksdb_options_set_max_bytes_for_level_base(db_opts, 256*MB);
@@ -309,8 +310,8 @@ int main() {
         printf("[compact] start %lldus\n", start_time);
         rocksdb_compact_range(db, NULL, 0, NULL, 0);
         long long end_time = ustime();
-        printf("[compact] start %lldus, used %llds\n", end_time, (end_time-start_time)/1000000);
-        sleep(100);
+        printf("[compact] end %lldus, used %llds\n", end_time, (end_time-start_time)/1000000);
+        sleep(2);
     }
     
     return 1;
